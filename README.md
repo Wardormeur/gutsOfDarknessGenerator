@@ -17,6 +17,6 @@ Considering the number of time we play with indexes, I'm pretty sure there is an
 
 Tests :))
 
-Split config generation into another pkg
-
 Split data recovery into another pkg
+
+Handle no result/single pagination

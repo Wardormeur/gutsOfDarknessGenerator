@@ -4,19 +4,17 @@ import (
   "log"
   "fmt"
   "strconv"
-  "time"
   "math/rand"
   "net/http"
+  "gutsOfDarkness/configuration"
   "github.com/PuerkitoBio/goquery"
 )
 
 func main() {
+  conf := configuration.New(configuration.NewCLIParser())
   // Config generation: select note, select style; randomly
-  rand.Seed(time.Now().UnixNano())
-  var minRange int = 5
-  var maxRange int = 6
-  note := rand.Intn((maxRange + 1) - minRange) + minRange
-  uri := fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?note=%v&typeobjet=0&annee=0&membre=&pays=0&tri=a", note)
+  uri := fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?note=%v&typeobjet=0&annee=%v&membre=&pays=0&tri=a", conf.Rank, conf.Year)
+  fmt.Println(uri)
   doc := loadPage(uri)
    // Find the number of pages for that selection
   var pages int = 0
@@ -26,7 +24,8 @@ func main() {
   selectedPage = rand.Intn(pages)
 
   // Reload the page with all randomness included
-  uri = fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?page=%v&note=%v&typeobjet=0&annee=0&membre=&pays=0&tri=a", selectedPage, note)
+  uri = fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?page=%v&note=%v&typeobjet=0&annee=%v&membre=&pays=0&tri=a", selectedPage, conf.Rank, conf.Year)
+  fmt.Println(uri)
   doc = loadPage(uri)
   // Select a random album
   albums := doc.Find("ul.objectList li")

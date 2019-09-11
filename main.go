@@ -13,7 +13,7 @@ import (
 func main() {
   conf := configuration.New(configuration.NewCLIParser())
   // Config generation: select note, select style; randomly
-  uri := fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?note=%v&typeobjet=0&annee=%v&membre=&pays=0&tri=a", conf.Rank, conf.Year)
+  uri := buildUrl(conf.Rank, conf.Year, 1)
   fmt.Println(uri)
   doc := loadPage(uri)
    // Find the number of pages for that selection
@@ -24,7 +24,7 @@ func main() {
   selectedPage = rand.Intn(pages)
 
   // Reload the page with all randomness included
-  uri = fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?page=%v&note=%v&typeobjet=0&annee=%v&membre=&pays=0&tri=a", selectedPage, conf.Rank, conf.Year)
+  uri = buildUrl(conf.Rank, conf.Year, selectedPage)
   fmt.Println(uri)
   doc = loadPage(uri)
   // Select a random album
@@ -35,6 +35,11 @@ func main() {
   name := album.Find("dt a").Get(1).FirstChild.Data
   fmt.Printf("%s - %s\n", band, name)
 }
+
+func buildUrl(rank int, year string, page int) string {
+  return fmt.Sprintf("https://www.gutsofdarkness.com/god/selection.php?page=%v&note=%v&typeobjet=0&annee=%v&membre=&pays=0&tri=a", page, rank, year)
+}
+
 func loadPage(uri string) *goquery.Document {
   res, err := http.Get(uri)
   if err != nil {

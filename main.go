@@ -3,6 +3,7 @@ package main
 import (
   "log"
   "fmt"
+  "os"
   "strconv"
   "math/rand"
   "net/http"
@@ -14,26 +15,33 @@ func main() {
   conf := configuration.New(configuration.NewCLIParser())
   // Config generation: select note, select style; randomly
   uri := buildUrl(conf.Rank, conf.Year, 1)
-  fmt.Println(uri)
   doc := loadPage(uri)
    // Find the number of pages for that selection
   var pages int = 0
   var selectedPage int = pages
-  navigationContainer := doc.Find("div.barre").First()
-  pages, _ = strconv.Atoi(navigationContainer.Find("strong").Last().Text())
-  selectedPage = rand.Intn(pages)
+  selectors := doc.Find("div.barre")
+  // The selector apperas only more than once if there is pagination
+  if selectors.Length() > 1 {
+    navigationContainer := selectors.First()
+    pages, _ = strconv.Atoi(navigationContainer.Find("strong").Last().Text())
+    selectedPage = rand.Intn(pages)
+  }
 
   // Reload the page with all randomness included
   uri = buildUrl(conf.Rank, conf.Year, selectedPage)
-  fmt.Println(uri)
   doc = loadPage(uri)
   // Select a random album
   albums := doc.Find("ul.objectList li")
-  albumIndex := rand.Intn(albums.Length())
-  album := albums.Slice(albumIndex, albumIndex + 1)
-  band := album.Find("dt a").First().Text()
-  name := album.Find("dt a").Get(1).FirstChild.Data
-  fmt.Printf("%s - %s\n", band, name)
+  nbAlbums := albums.Length()
+  if (nbAlbums > 0) {
+    albumIndex := rand.Intn(nbAlbums)
+    album := albums.Slice(albumIndex, albumIndex + 1)
+    band := album.Find("dt a").First().Text()
+    name := album.Find("dt a").Get(1).FirstChild.Data
+    fmt.Printf("%s - %s\n", band, name)
+    os.Exit(0)
+  }
+  os.Exit(1)
 }
 
 func buildUrl(rank int, year string, page int) string {

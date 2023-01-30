@@ -6,5 +6,5 @@ gem "nokogiri"
 
 group :development do
   gem "debug"
-
+  gem "rspec"
 end

@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    debug (1.7.1)
+    nokogiri (1.14.0-x86_64-linux)
+      racc (~> 1.4)
+    racc (1.6.2)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  debug
+  nokogiri
+
+BUNDLED WITH
+   2.4.5

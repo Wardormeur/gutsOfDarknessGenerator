@@ -3,7 +3,7 @@ GEM
   specs:
     debug (1.7.1)
     diff-lcs (1.5.0)
-    nokogiri (1.14.0-x86_64-linux)
+    nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
     racc (1.6.2)
     rspec (3.12.0)
